@@ -2,7 +2,7 @@ package fs
 
 import (
 	"errors"
-	"io/ioutil"
+	"io"
 	"os"
 	"time"
 )
@@ -43,13 +43,12 @@ func Load(filename string) ([]byte, error) {
 	}
 
 	file, err := os.Open(filename)
+	if err != nil {
+		return nil, err
+	}
 	defer file.Close()
 
-	if err != nil {
-		return []byte(""), err
-	}
-
-	bytes, err := ioutil.ReadAll(file)
+	bytes, err := io.ReadAll(file)
 
 	if err != nil {
 		return []byte(""), err

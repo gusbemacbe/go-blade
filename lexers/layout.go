@@ -1,4 +1,3 @@
 package lexers
 
-type Layout struct {
-}
+type Layout struct{}

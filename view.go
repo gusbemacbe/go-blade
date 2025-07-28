@@ -1,7 +1,6 @@
 package blade
 
 import (
-	"fmt"
 	"html/template"
 	"io"
 )
@@ -29,5 +28,5 @@ func (view *View) Render(writer io.Writer) error {
 }
 
 func (view *View) Strings() string {
-	return fmt.Sprintf("%s", view.HTML)
+	return view.HTML
 }
