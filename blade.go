@@ -22,13 +22,12 @@ func compileComments(value string) string {
 
 // compileEchos translates Blade's echo syntax to Go's.
 func compileEchos(value string) string {
-	// This pattern now correctly captures the variable name after the '$'
-	// and replaces it with the Go template dot notation.
-	reg := regexp.MustCompile(`{{\s*\$([a-zA-Z0-9_]+)\s*}}`)
+	// This pattern now correctly captures the complex variables (for example, `$Page.title``) and replaces the `$`` with the Go template dot notation.
+	reg := regexp.MustCompile(`{{\s*\$(.+?)\s*}}`)
 	value = reg.ReplaceAllString(value, `{{ .${1} }}`)
 
-	// This handles unescaped data, e.g., {!! $variable !!}
-	reg = regexp.MustCompile(`{!!\s*\$([a-zA-Z0-9_]+)\s*!!}`)
+	// This handles unescaped data, for example, `{!! $Content !!}`
+	reg = regexp.MustCompile(`{!!\s*\$(.+?)\s*!!}`)
 	value = reg.ReplaceAllString(value, `{{ .${1} }}`)
 
 	return value
@@ -36,9 +35,8 @@ func compileEchos(value string) string {
 
 // compileIf translates Blade's conditional statements.
 func compileIf(value string) string {
-	// This pattern now correctly captures the variable name after the '$'
-	// and replaces it with the Go template dot notation.
-	reg := regexp.MustCompile(`@if\s*\(\$([a-zA-Z0-9_]+)\)`)
+	// This pattern now correctly captures the complex variables within the directives.
+	reg := regexp.MustCompile(`@if\s*\(\s*\$(.+?)\s*\)`)
 	value = reg.ReplaceAllString(value, `{{if .${1}}}`)
 
 	reg = regexp.MustCompile(`@elseif\s*\((.+?)\)`)
